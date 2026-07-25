@@ -2,6 +2,7 @@
   {
     "id": 1,
     "theme": "A trip that changed how you see the world",
+    "theme_ja": "世界の見方が変わった旅",
     "category": "travel",
     "difficulty": "intermediate",
     "added": "2026-04"
@@ -9,6 +10,7 @@
   {
     "id": 2,
     "theme": "A habit you've tried to build (and failed)",
+    "theme_ja": "身につけようとして失敗した習慣",
     "category": "lifestyle",
     "difficulty": "beginner",
     "added": "2026-04"
@@ -16,6 +18,7 @@
   {
     "id": 3,
     "theme": "A tradition in your family or culture that surprises foreigners",
+    "theme_ja": "外国人が驚く、家族や文化の伝統",
     "category": "culture",
     "difficulty": "intermediate",
     "added": "2026-04"
@@ -23,6 +26,7 @@
   {
     "id": 4,
     "theme": "The best and worst parts of working remotely",
+    "theme_ja": "リモートワークの良い点・悪い点",
     "category": "work",
     "difficulty": "beginner",
     "added": "2026-04"
@@ -30,6 +34,7 @@
   {
     "id": 5,
     "theme": "A moment when you felt truly proud of yourself",
+    "theme_ja": "自分を誇りに思った瞬間",
     "category": "personal",
     "difficulty": "beginner",
     "added": "2026-04"
@@ -37,6 +42,7 @@
   {
     "id": 6,
     "theme": "How social media is changing the way we form friendships",
+    "theme_ja": "SNSが友達づくりを変えている",
     "category": "society",
     "difficulty": "advanced",
     "added": "2026-04"
@@ -44,6 +50,7 @@
   {
     "id": 7,
     "theme": "A place you'd love to live for one year — and why",
+    "theme_ja": "1年間住んでみたい場所とその理由",
     "category": "travel",
     "difficulty": "beginner",
     "added": "2026-04"
@@ -51,6 +58,7 @@
   {
     "id": 8,
     "theme": "The skills that will matter most in the next 10 years",
+    "theme_ja": "これからの10年で最も重要になるスキル",
     "category": "work",
     "difficulty": "advanced",
     "added": "2026-04"
@@ -58,6 +66,7 @@
   {
     "id": 9,
     "theme": "How food connects people across different cultures",
+    "theme_ja": "食べ物が文化を超えて人々をつなぐ",
     "category": "culture",
     "difficulty": "intermediate",
     "added": "2026-04"
@@ -65,6 +74,7 @@
   {
     "id": 10,
     "theme": "What does 'a good life' look like to you?",
+    "theme_ja": "あなたにとって「良い人生」とは？",
     "category": "personal",
     "difficulty": "advanced",
     "added": "2026-04"

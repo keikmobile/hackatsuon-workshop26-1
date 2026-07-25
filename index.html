@@ -80,6 +80,13 @@
       color: var(--subtext);
     }
 
+    #theme-ja {
+      font-size: 1rem;
+      color: var(--subtext);
+      font-weight: 400;
+      line-height: 1.5;
+    }
+
     #badges {
       display: flex;
       gap: 0.5rem;
@@ -245,11 +252,22 @@
       min-width: 5rem;
     }
 
-    .history-theme {
+    .history-theme-wrap {
       flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 0.1rem;
+      min-width: 0;
+    }
+
+    .history-theme {
       font-size: 0.9rem;
       font-weight: 500;
-      min-width: 0;
+    }
+
+    .history-theme-ja {
+      font-size: 0.78rem;
+      color: var(--subtext);
     }
 
     .history-empty {
@@ -302,6 +320,7 @@
 
   <div id="card">
     <div id="theme-text">Loading...</div>
+    <div id="theme-ja"></div>
     <div id="badges"></div>
   </div>
 
@@ -317,21 +336,21 @@
         <label for="cat">カテゴリ</label>
         <select id="cat" onchange="onFilterChange()">
           <option value="all">すべて</option>
-          <option value="travel">travel</option>
-          <option value="lifestyle">lifestyle</option>
-          <option value="culture">culture</option>
-          <option value="work">work</option>
-          <option value="personal">personal</option>
-          <option value="society">society</option>
+          <option value="travel">旅行 travel</option>
+          <option value="lifestyle">生活 lifestyle</option>
+          <option value="culture">文化 culture</option>
+          <option value="work">仕事 work</option>
+          <option value="personal">自分 personal</option>
+          <option value="society">社会 society</option>
         </select>
       </div>
       <div class="filter-group">
         <label for="diff">レベル</label>
         <select id="diff" onchange="onFilterChange()">
           <option value="all">すべて</option>
-          <option value="beginner">beginner</option>
-          <option value="intermediate">intermediate</option>
-          <option value="advanced">advanced</option>
+          <option value="beginner">初級 beginner</option>
+          <option value="intermediate">中級 intermediate</option>
+          <option value="advanced">上級 advanced</option>
         </select>
       </div>
       <span id="count"></span>
@@ -362,6 +381,21 @@
     const HISTORY_KEY = 'eth_history';
     const MAX_HISTORY = 500;
 
+    const CATEGORY_JA = {
+      travel: '旅行', lifestyle: '生活', culture: '文化',
+      work: '仕事', personal: '自分', society: '社会'
+    };
+    const DIFFICULTY_JA = {
+      beginner: '初級', intermediate: '中級', advanced: '上級'
+    };
+
+    function badgeHtml(theme) {
+      const catJa = CATEGORY_JA[theme.category] || theme.category;
+      const diffJa = DIFFICULTY_JA[theme.difficulty] || theme.difficulty;
+      return `<span class="badge">${catJa} ${theme.category}</span>`
+           + `<span class="badge">${diffJa} ${theme.difficulty}</span>`;
+    }
+
     let recentIds = [];
     let allThemes = [];
 
@@ -391,8 +425,8 @@
       setTimeout(() => {
         document.getElementById('theme-text').textContent = theme.theme;
         document.getElementById('theme-text').className = '';
-        document.getElementById('badges').innerHTML =
-          `<span class="badge">${theme.category}</span><span class="badge">${theme.difficulty}</span>`;
+        document.getElementById('theme-ja').textContent = theme.theme_ja || '';
+        document.getElementById('badges').innerHTML = badgeHtml(theme);
         card.classList.remove('fade');
       }, 150);
     }
@@ -435,6 +469,7 @@
       history.push({
         id: theme.id,
         theme: theme.theme,
+        theme_ja: theme.theme_ja || '',
         category: theme.category,
         difficulty: theme.difficulty,
         ts: new Date().toISOString()
@@ -470,10 +505,14 @@
       const dateStr = showDate
         ? date.toLocaleDateString('ja-JP', { month: 'numeric', day: 'numeric', weekday: 'short' }) + ' ' + timeStr
         : timeStr;
+      const jaLine = h.theme_ja ? `<span class="history-theme-ja">${escapeHtml(h.theme_ja)}</span>` : '';
       return `<div class="history-item">
         <span class="history-time">${dateStr}</span>
-        <span class="history-theme">${escapeHtml(h.theme)}</span>
-        <span class="badge">${h.category}</span><span class="badge">${h.difficulty}</span>
+        <div class="history-theme-wrap">
+          <span class="history-theme">${escapeHtml(h.theme)}</span>
+          ${jaLine}
+        </div>
+        <span class="badge">${CATEGORY_JA[h.category] || h.category}</span><span class="badge">${DIFFICULTY_JA[h.difficulty] || h.difficulty}</span>
       </div>`;
     }
 
