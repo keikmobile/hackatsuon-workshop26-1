@@ -413,6 +413,45 @@
     .vote-verdict.not-passed { color: #dc2626; }
     .vote-verdict.pending    { color: var(--subtext); }
 
+    /* ── Vote results list ── */
+    .vr-item {
+      padding: 0.75rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .vr-theme {
+      font-size: 0.9rem;
+      font-weight: 600;
+      margin-bottom: 0.15rem;
+    }
+
+    .vr-theme-ja {
+      font-size: 0.78rem;
+      color: var(--subtext);
+      margin-bottom: 0.5rem;
+    }
+
+    .vr-bar-row {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    .vr-counts {
+      font-size: 0.82rem;
+      color: var(--subtext);
+      white-space: nowrap;
+    }
+
+    .vr-verdict {
+      font-size: 0.82rem;
+      font-weight: 700;
+    }
+
+    .vr-verdict.passed     { color: #16a34a; }
+    .vr-verdict.not-passed { color: #dc2626; }
+
     @media (max-width: 480px) {
       #theme-text { font-size: 1.8rem; }
       #btn-next { font-size: 1.2rem; padding: 0.9rem 2rem; }
@@ -483,6 +522,14 @@
       <span id="history-badge"></span>
     </button>
     <div class="section-body" id="history-body"></div>
+  </div>
+
+  <!-- Vote Results -->
+  <div class="section">
+    <button class="section-toggle" id="vr-toggle" onclick="toggleVoteResults()" aria-expanded="false">
+      <span class="section-arrow" id="vr-arrow">▶</span> 📊 投票結果
+    </button>
+    <div class="section-body" id="vr-body"></div>
   </div>
 
   <!-- JSON -->
@@ -834,6 +881,68 @@
       arrow.style.transform = isOpen ? 'rotate(90deg)' : '';
       toggle.setAttribute('aria-expanded', isOpen);
       if (isOpen) renderHistory();
+    }
+
+    /* ── Vote results ── */
+
+    async function fetchAllVotes() {
+      try {
+        const res = await fetch(
+          `${SUPABASE_URL}/rest/v1/votes?select=theme_id,vote`,
+          { headers: { apikey: SUPABASE_ANON } }
+        );
+        return await res.json();
+      } catch { return []; }
+    }
+
+    async function renderVoteResults() {
+      const container = document.getElementById('vr-body');
+      container.innerHTML = '<p class="history-empty">読み込み中...</p>';
+
+      const votes = await fetchAllVotes();
+      if (!Array.isArray(votes) || votes.length === 0) {
+        container.innerHTML = '<p class="history-empty">まだ投票がありません。</p>';
+        return;
+      }
+
+      const tally = {};
+      votes.forEach(v => {
+        if (!tally[v.theme_id]) tally[v.theme_id] = { yes: 0, no: 0 };
+        v.vote === 'yes' ? tally[v.theme_id].yes++ : tally[v.theme_id].no++;
+      });
+
+      const entries = Object.entries(tally)
+        .map(([id, c]) => ({ id: parseInt(id), ...c, total: c.yes + c.no }))
+        .sort((a, b) => b.total - a.total);
+
+      let html = '';
+      entries.forEach(e => {
+        const theme = allThemes.find(t => t.id === e.id);
+        if (!theme) return;
+        const pct    = Math.round(e.yes / e.total * 100);
+        const passed = e.yes / e.total > 0.5;
+        html += `<div class="vr-item">
+          <div class="vr-theme">${escapeHtml(theme.theme)}</div>
+          <div class="vr-theme-ja">${escapeHtml(theme.theme_ja || '')}</div>
+          <div class="vr-bar-row">
+            <div class="vote-bar-wrap"><div class="vote-bar" style="width:${pct}%"></div></div>
+            <span class="vr-counts">👍 ${e.yes}　😐 ${e.no}</span>
+            <span class="vr-verdict ${passed ? 'passed' : 'not-passed'}">${passed ? '✅ 成立' : '❌ 未成立'}（${pct}%）</span>
+          </div>
+        </div>`;
+      });
+
+      container.innerHTML = html;
+    }
+
+    function toggleVoteResults() {
+      const body   = document.getElementById('vr-body');
+      const arrow  = document.getElementById('vr-arrow');
+      const toggle = document.getElementById('vr-toggle');
+      const isOpen = body.classList.toggle('open');
+      arrow.style.transform = isOpen ? 'rotate(90deg)' : '';
+      toggle.setAttribute('aria-expanded', isOpen);
+      if (isOpen) renderVoteResults();
     }
 
     /* ── Help toggle ── */
