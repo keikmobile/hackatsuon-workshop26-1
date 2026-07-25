@@ -438,7 +438,7 @@
     <p class="vote-label">この話題はどうでしたか？</p>
     <div id="vote-buttons" class="vote-buttons">
       <button class="vote-btn yes" onclick="castVote('yes')">👍 盛り上がった</button>
-      <button class="vote-btn no"  onclick="castVote('no')">👎 今回はパス</button>
+      <button class="vote-btn no"  onclick="castVote('no')">😐 普通だった</button>
     </div>
     <div id="vote-result" class="vote-result"></div>
   </div>
@@ -688,7 +688,7 @@
       result.style.display = 'flex';
       result.innerHTML = `
         <div class="vote-bar-wrap"><div class="vote-bar" style="width:${pct}%"></div></div>
-        <div class="vote-counts">👍 ${yes}票　👎 ${no}票</div>
+        <div class="vote-counts">👍 ${yes}票　😐 ${no}票</div>
         <div class="vote-verdict ${total === 0 ? 'pending' : passed ? 'passed' : 'not-passed'}">
           ${total === 0 ? '— まだ票がありません'
             : passed  ? `✅ 成立（${pct}%）`
