@@ -304,6 +304,48 @@
       display: none;
     }
 
+    /* ── Help section ── */
+    .help-block {
+      margin-bottom: 1.25rem;
+    }
+
+    .help-block-title {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 0.4rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .help-block p {
+      font-size: 0.875rem;
+      color: var(--subtext);
+      line-height: 1.7;
+      margin-bottom: 0.3rem;
+    }
+
+    .help-block p + p {
+      margin-top: 0.25rem;
+    }
+
+    .help-tip {
+      background: var(--badge-bg);
+      border-radius: 0.5rem;
+      padding: 0.6rem 0.9rem;
+      font-size: 0.82rem;
+      color: var(--subtext);
+      line-height: 1.65;
+      margin-top: 0.5rem;
+    }
+
+    .help-divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 1rem 0;
+    }
+
     @media (max-width: 480px) {
       #theme-text { font-size: 1.8rem; }
       #btn-next { font-size: 1.2rem; padding: 0.9rem 2rem; }
@@ -373,6 +415,53 @@
     </button>
     <div class="section-body" id="json-body">
       <pre id="json-pre"></pre>
+    </div>
+  </div>
+
+  <!-- Help -->
+  <div class="section">
+    <button class="section-toggle" id="help-toggle" onclick="toggleHelp()" aria-expanded="false">
+      <span class="section-arrow" id="help-arrow">▶</span> 使い方
+    </button>
+    <div class="section-body" id="help-body">
+
+      <div class="help-block">
+        <div class="help-block-title">🎲 このアプリについて</div>
+        <p>英会話の練習やイベントで使えるトークテーマをランダムに表示するツールです。</p>
+        <p>テーマは英語で表示され、下に日本語訳が添えられます。</p>
+      </div>
+
+      <hr class="help-divider">
+
+      <div class="help-block">
+        <div class="help-block-title">▶ Next Theme ボタン</div>
+        <p>ボタンを押すたびに新しいテーマが表示されます。</p>
+        <p>直近5件は再表示されないよう制御されています。</p>
+        <div class="help-tip">
+          💡 会話が盛り上がったテーマはもう一度出ることがあります。
+          同じテーマが続く場合はフィルターで絞り込んでみてください。
+        </div>
+      </div>
+
+      <hr class="help-divider">
+
+      <div class="help-block">
+        <div class="help-block-title">🔍 フィルター</div>
+        <p><strong>カテゴリ</strong>：旅行・生活・文化・仕事・自分・社会の6種類から絞り込めます。</p>
+        <p><strong>レベル</strong>：初級 / 中級 / 上級で難易度を選べます。</p>
+        <div class="help-tip">
+          💡 初めて使うグループには「初級」、慣れてきたら「中級〜上級」がおすすめです。
+        </div>
+      </div>
+
+      <hr class="help-divider">
+
+      <div class="help-block">
+        <div class="help-block-title">📋 使用履歴</div>
+        <p>今日・今週に表示したテーマを一覧で確認できます。</p>
+        <p>履歴はこのブラウザにのみ保存されます（他の端末とは共有されません）。</p>
+      </div>
+
     </div>
   </div>
 
@@ -583,6 +672,17 @@
       arrow.style.transform = isOpen ? 'rotate(90deg)' : '';
       toggle.setAttribute('aria-expanded', isOpen);
       if (isOpen) renderHistory();
+    }
+
+    /* ── Help toggle ── */
+
+    function toggleHelp() {
+      const body = document.getElementById('help-body');
+      const arrow = document.getElementById('help-arrow');
+      const toggle = document.getElementById('help-toggle');
+      const isOpen = body.classList.toggle('open');
+      arrow.style.transform = isOpen ? 'rotate(90deg)' : '';
+      toggle.setAttribute('aria-expanded', isOpen);
     }
 
     /* ── Filter toggle ── */
