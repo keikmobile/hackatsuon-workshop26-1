@@ -346,6 +346,73 @@
       margin: 1rem 0;
     }
 
+    /* ── Vote section ── */
+    #vote-section {
+      width: 100%;
+      max-width: 660px;
+      margin-top: 1.5rem;
+      text-align: center;
+      display: none;
+    }
+
+    .vote-label {
+      font-size: 0.875rem;
+      color: var(--subtext);
+      margin-bottom: 0.85rem;
+    }
+
+    .vote-buttons {
+      display: flex;
+      gap: 0.75rem;
+      justify-content: center;
+    }
+
+    .vote-btn {
+      border: 2px solid var(--border);
+      background: var(--card-bg);
+      border-radius: 999px;
+      padding: 0.6rem 1.5rem;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.15s;
+      font-family: inherit;
+    }
+
+    .vote-btn.yes:hover { background: #f0fdf4; border-color: #22c55e; }
+    .vote-btn.no:hover  { background: #fef2f2; border-color: #ef4444; }
+
+    .vote-result {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .vote-bar-wrap {
+      width: 220px;
+      height: 8px;
+      background: #fee2e2;
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .vote-bar {
+      height: 100%;
+      background: #22c55e;
+      border-radius: 999px;
+      transition: width 0.4s ease;
+    }
+
+    .vote-counts {
+      font-size: 0.85rem;
+      color: var(--subtext);
+    }
+
+    .vote-verdict { font-size: 1.1rem; font-weight: 700; }
+    .vote-verdict.passed     { color: #16a34a; }
+    .vote-verdict.not-passed { color: #dc2626; }
+    .vote-verdict.pending    { color: var(--subtext); }
+
     @media (max-width: 480px) {
       #theme-text { font-size: 1.8rem; }
       #btn-next { font-size: 1.2rem; padding: 0.9rem 2rem; }
@@ -364,6 +431,16 @@
     <div id="theme-text">Loading...</div>
     <div id="theme-ja"></div>
     <div id="badges"></div>
+  </div>
+
+  <!-- Vote -->
+  <div id="vote-section">
+    <p class="vote-label">この話題はどうでしたか？</p>
+    <div id="vote-buttons" class="vote-buttons">
+      <button class="vote-btn yes" onclick="castVote('yes')">👍 盛り上がった</button>
+      <button class="vote-btn no"  onclick="castVote('no')">👎 今回はパス</button>
+    </div>
+    <div id="vote-result" class="vote-result"></div>
   </div>
 
   <button id="btn-next" onclick="showRandom()">🎲 Next Theme</button>
@@ -466,9 +543,15 @@
   </div>
 
   <script>
+    const SUPABASE_URL  = 'https://lmqifbjzbtmbkrfkzyqc.supabase.co';
+    const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxtcWlmYmp6YnRtYmtyZmt6eXFjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ5NTU0ODQsImV4cCI6MjEwMDUzMTQ4NH0.x05XlCmdmHJjfcMps1APiWg5JNRQn_SKnox3_N1WwOM';
+
     const HISTORY_SIZE = 5;
-    const HISTORY_KEY = 'eth_history';
-    const MAX_HISTORY = 500;
+    const HISTORY_KEY  = 'eth_history';
+    const VOTED_KEY    = 'eth_voted';
+    const MAX_HISTORY  = 500;
+
+    let currentTheme = null;
 
     const CATEGORY_JA = {
       travel: '旅行', lifestyle: '生活', culture: '文化',
@@ -531,9 +614,11 @@
         return;
       }
       const theme = getRandomTheme(filtered);
+      currentTheme = theme;
       renderCard(theme);
       saveToHistory(theme);
       updateHistoryBadge();
+      resetVoteSection(theme);
     }
 
     function updateCount(n) {
@@ -543,6 +628,83 @@
     function onFilterChange() {
       recentIds = [];
       showRandom();
+    }
+
+    /* ── Vote ── */
+
+    function getVoterId() {
+      let id = localStorage.getItem('eth_voter_id');
+      if (!id) { id = crypto.randomUUID(); localStorage.setItem('eth_voter_id', id); }
+      return id;
+    }
+
+    function getVoted() {
+      try { return JSON.parse(localStorage.getItem(VOTED_KEY) || '{}'); } catch { return {}; }
+    }
+
+    function setVoted(themeId, vote) {
+      const v = getVoted(); v[themeId] = vote;
+      localStorage.setItem(VOTED_KEY, JSON.stringify(v));
+    }
+
+    async function fetchVotes(themeId) {
+      try {
+        const res = await fetch(
+          `${SUPABASE_URL}/rest/v1/votes?theme_id=eq.${themeId}&select=vote`,
+          { headers: { apikey: SUPABASE_ANON } }
+        );
+        return await res.json();
+      } catch { return []; }
+    }
+
+    async function castVote(vote) {
+      if (!currentTheme) return;
+      const themeId = currentTheme.id;
+      try {
+        await fetch(`${SUPABASE_URL}/rest/v1/votes`, {
+          method: 'POST',
+          headers: {
+            apikey: SUPABASE_ANON,
+            'Content-Type': 'application/json',
+            Prefer: 'return=minimal'
+          },
+          body: JSON.stringify({ theme_id: themeId, voter_id: getVoterId(), vote })
+        });
+      } catch {}
+      setVoted(themeId, vote);
+      showVoteResult(themeId);
+    }
+
+    async function showVoteResult(themeId) {
+      const votes = await fetchVotes(themeId);
+      const yes   = votes.filter(v => v.vote === 'yes').length;
+      const no    = votes.filter(v => v.vote === 'no').length;
+      const total = yes + no;
+      const pct   = total > 0 ? Math.round(yes / total * 100) : 0;
+      const passed = total > 0 && yes / total > 0.5;
+
+      document.getElementById('vote-buttons').style.display = 'none';
+      const result = document.getElementById('vote-result');
+      result.style.display = 'flex';
+      result.innerHTML = `
+        <div class="vote-bar-wrap"><div class="vote-bar" style="width:${pct}%"></div></div>
+        <div class="vote-counts">👍 ${yes}票　👎 ${no}票</div>
+        <div class="vote-verdict ${total === 0 ? 'pending' : passed ? 'passed' : 'not-passed'}">
+          ${total === 0 ? '— まだ票がありません'
+            : passed  ? `✅ 成立（${pct}%）`
+                      : `❌ 未成立（${pct}%）`}
+        </div>`;
+    }
+
+    function resetVoteSection(theme) {
+      const section = document.getElementById('vote-section');
+      const buttons = document.getElementById('vote-buttons');
+      const result  = document.getElementById('vote-result');
+      section.style.display = 'block';
+      result.style.display  = 'none';
+      result.innerHTML      = '';
+      buttons.style.display = 'flex';
+      if (getVoted()[theme.id] !== undefined) showVoteResult(theme.id);
     }
 
     /* ── History ── */
