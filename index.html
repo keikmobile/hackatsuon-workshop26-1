@@ -1,76 +1,603 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Hackatsuon Starter</title>
-<style>
-  :root {
-    --ink: #1b2a3a;      /* 三陸の夜の海 */
-    --paper: #f6f4ef;    /* 帆布 */
-    --accent: #c8451f;   /* 大漁旗の朱 */
-    --wave: #2e6f8e;     /* 昼の海 */
-  }
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  body {
-    font-family: "Hiragino Kaku Gothic ProN", "Yu Gothic", sans-serif;
-    background: var(--paper);
-    color: var(--ink);
-    min-height: 100svh;
-    display: grid;
-    place-items: center;
-    padding: 2rem;
-  }
-  main { max-width: 34rem; text-align: center; }
-  .flag {
-    display: inline-block;
-    background: var(--accent);
-    color: var(--paper);
-    font-weight: 700;
-    letter-spacing: 0.35em;
-    padding: 0.4rem 1.2rem 0.4rem 1.55rem;
-    margin-bottom: 2rem;
-  }
-  h1 {
-    font-size: clamp(1.8rem, 6vw, 2.6rem);
-    line-height: 1.4;
-    margin-bottom: 1.2rem;
-  }
-  h1 em {
-    font-style: normal;
-    color: var(--wave);
-    border-bottom: 4px solid var(--accent);
-  }
-  p { line-height: 1.9; color: #445; }
-  .hint {
-    margin-top: 2.5rem;
-    font-size: 0.85rem;
-    text-align: left;
-    background: #fff;
-    border-left: 4px solid var(--wave);
-    padding: 1rem 1.2rem;
-  }
-  code {
-    background: var(--ink);
-    color: var(--paper);
-    padding: 0.15em 0.5em;
-    border-radius: 3px;
-    font-size: 0.9em;
-  }
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🎲 English Theme Randomizer</title>
+  <style>
+    :root {
+      --primary: #4f46e5;
+      --primary-hover: #4338ca;
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --text: #1e293b;
+      --subtext: #64748b;
+      --border: #e2e8f0;
+      --badge-bg: #f1f5f9;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 2rem 1rem 4rem;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 2.5rem;
+    }
+
+    header h1 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--subtext);
+      letter-spacing: 0.02em;
+    }
+
+    /* ── Theme card ── */
+    #card {
+      background: var(--card-bg);
+      border-radius: 1.25rem;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+      padding: 2.5rem 2rem;
+      width: 100%;
+      max-width: 660px;
+      min-height: 200px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      gap: 1.25rem;
+      transition: opacity 0.15s ease;
+    }
+
+    #card.fade {
+      opacity: 0;
+    }
+
+    #theme-text {
+      font-size: 2rem;
+      font-weight: 700;
+      line-height: 1.35;
+      color: var(--text);
+    }
+
+    #theme-text.no-match {
+      font-size: 1.25rem;
+      font-weight: 400;
+      color: var(--subtext);
+    }
+
+    #badges {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .badge {
+      background: var(--badge-bg);
+      color: var(--subtext);
+      border-radius: 999px;
+      padding: 0.3rem 0.85rem;
+      font-size: 0.85rem;
+      font-weight: 500;
+      text-transform: capitalize;
+    }
+
+    /* ── Next button ── */
+    #btn-next {
+      margin-top: 2.25rem;
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      border-radius: 999px;
+      font-size: 1.4rem;
+      font-weight: 700;
+      padding: 1rem 2.75rem;
+      cursor: pointer;
+      transition: background 0.15s ease, transform 0.1s ease;
+      box-shadow: 0 4px 14px rgba(79,70,229,0.35);
+    }
+
+    #btn-next:hover {
+      background: var(--primary-hover);
+    }
+
+    #btn-next:active {
+      transform: scale(0.97);
+    }
+
+    /* ── Accordion sections (shared) ── */
+    .section {
+      margin-top: 1.5rem;
+      width: 100%;
+      max-width: 660px;
+    }
+
+    .section-toggle {
+      background: none;
+      border: none;
+      color: var(--subtext);
+      font-size: 0.9rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.25rem 0;
+      border-bottom: 1px solid var(--border);
+      width: 100%;
+    }
+
+    .section-toggle:hover { color: var(--text); }
+
+    .section-arrow {
+      transition: transform 0.2s ease;
+      display: inline-block;
+    }
+
+    .section-body {
+      display: none;
+      padding-top: 1rem;
+    }
+
+    .section-body.open { display: block; }
+
+    /* ── Filter section ── */
+    #filter-body {
+      display: none;
+      padding: 1.25rem 0 0.5rem;
+      gap: 1rem;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    #filter-body.open { display: flex; }
+
+    .filter-group {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .filter-group label {
+      font-size: 0.875rem;
+      color: var(--subtext);
+      white-space: nowrap;
+    }
+
+    .filter-group select {
+      border: 1px solid var(--border);
+      border-radius: 0.5rem;
+      padding: 0.35rem 0.75rem;
+      font-size: 0.875rem;
+      color: var(--text);
+      background: var(--card-bg);
+      cursor: pointer;
+    }
+
+    #count {
+      font-size: 0.85rem;
+      color: var(--subtext);
+      margin-left: auto;
+    }
+
+    /* ── JSON section ── */
+    #json-pre {
+      background: #1e293b;
+      color: #e2e8f0;
+      font-family: 'Menlo', 'Monaco', 'Consolas', monospace;
+      font-size: 0.78rem;
+      line-height: 1.65;
+      padding: 1.25rem;
+      border-radius: 0.75rem;
+      overflow-x: auto;
+      white-space: pre;
+    }
+
+    .json-key  { color: #818cf8; }
+    .json-str  { color: #4ade80; }
+    .json-num  { color: #60a5fa; }
+    .json-bool { color: #fb923c; }
+    .json-null { color: #fb923c; }
+
+    /* ── History section ── */
+    .history-group {
+      margin-bottom: 1.25rem;
+    }
+
+    .history-group-label {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--subtext);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 0.5rem;
+      padding-bottom: 0.25rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .history-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.55rem 0;
+      border-bottom: 1px solid var(--border);
+      flex-wrap: wrap;
+    }
+
+    .history-time {
+      font-size: 0.78rem;
+      color: var(--subtext);
+      white-space: nowrap;
+      min-width: 5rem;
+    }
+
+    .history-theme {
+      flex: 1;
+      font-size: 0.9rem;
+      font-weight: 500;
+      min-width: 0;
+    }
+
+    .history-empty {
+      font-size: 0.9rem;
+      color: var(--subtext);
+      padding: 1rem 0;
+    }
+
+    .history-clear {
+      margin-top: 1rem;
+      background: none;
+      border: 1px solid var(--border);
+      border-radius: 0.5rem;
+      padding: 0.4rem 1rem;
+      font-size: 0.8rem;
+      color: var(--subtext);
+      cursor: pointer;
+      transition: border-color 0.15s, color 0.15s;
+    }
+
+    .history-clear:hover {
+      border-color: #ef4444;
+      color: #ef4444;
+    }
+
+    #history-badge {
+      background: var(--primary);
+      color: #fff;
+      border-radius: 999px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 0.1rem 0.5rem;
+      margin-left: 0.25rem;
+      display: none;
+    }
+
+    @media (max-width: 480px) {
+      #theme-text { font-size: 1.8rem; }
+      #btn-next { font-size: 1.2rem; padding: 0.9rem 2rem; }
+      #count { margin-left: 0; width: 100%; }
+      .history-theme { width: 100%; }
+    }
+  </style>
 </head>
 <body>
-<main>
-  <span class="flag">出港準備完了</span>
-  <h1>このページが見えたら、<br><em>デプロイ成功</em>です</h1>
-  <p>
-    ここは、あなたのアプリの出発点。<br>
-    このページを、あなたの作りたいものに書き換えていきましょう。
-  </p>
-  <div class="hint">
-    Claude Code にこう伝えてみてください:<br>
-    <code>index.html を◯◯なアプリに書き換えて</code>
+
+  <header>
+    <h1>🎲 English Theme Randomizer</h1>
+  </header>
+
+  <div id="card">
+    <div id="theme-text">Loading...</div>
+    <div id="badges"></div>
   </div>
-</main>
+
+  <button id="btn-next" onclick="showRandom()">🎲 Next Theme</button>
+
+  <!-- Filter -->
+  <div class="section">
+    <button class="section-toggle" id="filter-toggle" onclick="toggleFilter()" aria-expanded="false">
+      <span class="section-arrow" id="filter-arrow">▶</span> フィルター
+    </button>
+    <div id="filter-body">
+      <div class="filter-group">
+        <label for="cat">カテゴリ</label>
+        <select id="cat" onchange="onFilterChange()">
+          <option value="all">すべて</option>
+          <option value="travel">travel</option>
+          <option value="lifestyle">lifestyle</option>
+          <option value="culture">culture</option>
+          <option value="work">work</option>
+          <option value="personal">personal</option>
+          <option value="society">society</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label for="diff">レベル</label>
+        <select id="diff" onchange="onFilterChange()">
+          <option value="all">すべて</option>
+          <option value="beginner">beginner</option>
+          <option value="intermediate">intermediate</option>
+          <option value="advanced">advanced</option>
+        </select>
+      </div>
+      <span id="count"></span>
+    </div>
+  </div>
+
+  <!-- History -->
+  <div class="section">
+    <button class="section-toggle" id="history-toggle" onclick="toggleHistory()" aria-expanded="false">
+      <span class="section-arrow" id="history-arrow">▶</span> 使用履歴
+      <span id="history-badge"></span>
+    </button>
+    <div class="section-body" id="history-body"></div>
+  </div>
+
+  <!-- JSON -->
+  <div class="section">
+    <button class="section-toggle" id="json-toggle" onclick="toggleJson()" aria-expanded="false">
+      <span class="section-arrow" id="json-arrow">▶</span> JSON を見る
+    </button>
+    <div class="section-body" id="json-body">
+      <pre id="json-pre"></pre>
+    </div>
+  </div>
+
+  <script>
+    const HISTORY_SIZE = 5;
+    const HISTORY_KEY = 'eth_history';
+    const MAX_HISTORY = 500;
+
+    let recentIds = [];
+    let allThemes = [];
+
+    /* ── Core ── */
+
+    function getFilteredThemes() {
+      const cat = document.getElementById('cat').value;
+      const diff = document.getElementById('diff').value;
+      return allThemes.filter(t =>
+        (cat === 'all' || t.category === cat) &&
+        (diff === 'all' || t.difficulty === diff)
+      );
+    }
+
+    function getRandomTheme(themes) {
+      const pool = themes.filter(t => !recentIds.includes(t.id));
+      const candidates = pool.length > 0 ? pool : themes;
+      const picked = candidates[Math.floor(Math.random() * candidates.length)];
+      recentIds.push(picked.id);
+      if (recentIds.length > HISTORY_SIZE) recentIds.shift();
+      return picked;
+    }
+
+    function renderCard(theme) {
+      const card = document.getElementById('card');
+      card.classList.add('fade');
+      setTimeout(() => {
+        document.getElementById('theme-text').textContent = theme.theme;
+        document.getElementById('theme-text').className = '';
+        document.getElementById('badges').innerHTML =
+          `<span class="badge">${theme.category}</span><span class="badge">${theme.difficulty}</span>`;
+        card.classList.remove('fade');
+      }, 150);
+    }
+
+    function showRandom() {
+      const filtered = getFilteredThemes();
+      updateCount(filtered.length);
+      if (filtered.length === 0) {
+        const textEl = document.getElementById('theme-text');
+        textEl.textContent = 'フィルターに一致するテーマがありません。';
+        textEl.className = 'no-match';
+        document.getElementById('badges').innerHTML = '';
+        return;
+      }
+      const theme = getRandomTheme(filtered);
+      renderCard(theme);
+      saveToHistory(theme);
+      updateHistoryBadge();
+    }
+
+    function updateCount(n) {
+      document.getElementById('count').textContent = `${n} 件`;
+    }
+
+    function onFilterChange() {
+      recentIds = [];
+      showRandom();
+    }
+
+    /* ── History ── */
+
+    function loadHistory() {
+      try {
+        return JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]');
+      } catch { return []; }
+    }
+
+    function saveToHistory(theme) {
+      const history = loadHistory();
+      history.push({
+        id: theme.id,
+        theme: theme.theme,
+        category: theme.category,
+        difficulty: theme.difficulty,
+        ts: new Date().toISOString()
+      });
+      if (history.length > MAX_HISTORY) history.splice(0, history.length - MAX_HISTORY);
+      localStorage.setItem(HISTORY_KEY, JSON.stringify(history));
+
+      const body = document.getElementById('history-body');
+      if (body.classList.contains('open')) renderHistory();
+    }
+
+    function todayStart() {
+      const d = new Date();
+      d.setHours(0, 0, 0, 0);
+      return d.getTime();
+    }
+
+    function weekStart() {
+      const d = new Date();
+      const day = d.getDay();
+      d.setDate(d.getDate() - (day === 0 ? 6 : day - 1)); // 月曜始まり
+      d.setHours(0, 0, 0, 0);
+      return d.getTime();
+    }
+
+    function escapeHtml(str) {
+      return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    }
+
+    function historyItemHtml(h, showDate) {
+      const date = new Date(h.ts);
+      const timeStr = date.toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit' });
+      const dateStr = showDate
+        ? date.toLocaleDateString('ja-JP', { month: 'numeric', day: 'numeric', weekday: 'short' }) + ' ' + timeStr
+        : timeStr;
+      return `<div class="history-item">
+        <span class="history-time">${dateStr}</span>
+        <span class="history-theme">${escapeHtml(h.theme)}</span>
+        <span class="badge">${h.category}</span><span class="badge">${h.difficulty}</span>
+      </div>`;
+    }
+
+    function renderHistory() {
+      const history = loadHistory();
+      const today = todayStart();
+      const week = weekStart();
+      const container = document.getElementById('history-body');
+
+      if (history.length === 0) {
+        container.innerHTML = '<p class="history-empty">まだ履歴がありません。「Next Theme」を押してみましょう！</p>';
+        return;
+      }
+
+      const todayItems = history.filter(h => new Date(h.ts).getTime() >= today).reverse();
+      const weekItems = history.filter(h => {
+        const t = new Date(h.ts).getTime();
+        return t >= week && t < today;
+      }).reverse();
+
+      let html = '';
+
+      if (todayItems.length > 0) {
+        html += '<div class="history-group"><div class="history-group-label">今日</div>';
+        todayItems.forEach(h => { html += historyItemHtml(h, false); });
+        html += '</div>';
+      }
+
+      if (weekItems.length > 0) {
+        html += '<div class="history-group"><div class="history-group-label">今週（昨日以前）</div>';
+        weekItems.forEach(h => { html += historyItemHtml(h, true); });
+        html += '</div>';
+      }
+
+      if (todayItems.length === 0 && weekItems.length === 0) {
+        html = '<p class="history-empty">今週の履歴はありません。</p>';
+      }
+
+      html += '<button class="history-clear" onclick="clearHistory()">履歴をクリア</button>';
+      container.innerHTML = html;
+    }
+
+    function clearHistory() {
+      if (!confirm('履歴をすべて削除しますか？')) return;
+      localStorage.removeItem(HISTORY_KEY);
+      updateHistoryBadge();
+      renderHistory();
+    }
+
+    function updateHistoryBadge() {
+      const history = loadHistory();
+      const today = todayStart();
+      const todayCount = history.filter(h => new Date(h.ts).getTime() >= today).length;
+      const badge = document.getElementById('history-badge');
+      if (todayCount > 0) {
+        badge.textContent = todayCount;
+        badge.style.display = 'inline';
+      } else {
+        badge.style.display = 'none';
+      }
+    }
+
+    function toggleHistory() {
+      const body = document.getElementById('history-body');
+      const arrow = document.getElementById('history-arrow');
+      const toggle = document.getElementById('history-toggle');
+      const isOpen = body.classList.toggle('open');
+      arrow.style.transform = isOpen ? 'rotate(90deg)' : '';
+      toggle.setAttribute('aria-expanded', isOpen);
+      if (isOpen) renderHistory();
+    }
+
+    /* ── Filter toggle ── */
+
+    function toggleFilter() {
+      const body = document.getElementById('filter-body');
+      const arrow = document.getElementById('filter-arrow');
+      const toggle = document.getElementById('filter-toggle');
+      const isOpen = body.classList.toggle('open');
+      arrow.style.transform = isOpen ? 'rotate(90deg)' : '';
+      toggle.setAttribute('aria-expanded', isOpen);
+    }
+
+    /* ── JSON viewer ── */
+
+    function syntaxHighlight(json) {
+      const escaped = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+      return escaped.replace(
+        /("(?:\\u[a-fA-F0-9]{4}|\\[^u]|[^\\"])*"(?:\s*:)?|\b(?:true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+-]?\d+)?)/g,
+        m => {
+          if (/^"/.test(m)) return `<span class="${/:$/.test(m) ? 'json-key' : 'json-str'}">${m}</span>`;
+          if (/true|false/.test(m)) return `<span class="json-bool">${m}</span>`;
+          if (/null/.test(m)) return `<span class="json-null">${m}</span>`;
+          return `<span class="json-num">${m}</span>`;
+        }
+      );
+    }
+
+    function toggleJson() {
+      const body = document.getElementById('json-body');
+      const arrow = document.getElementById('json-arrow');
+      const toggle = document.getElementById('json-toggle');
+      const isOpen = body.classList.toggle('open');
+      arrow.style.transform = isOpen ? 'rotate(90deg)' : '';
+      toggle.setAttribute('aria-expanded', isOpen);
+      if (isOpen) {
+        document.getElementById('json-pre').innerHTML = syntaxHighlight(JSON.stringify(allThemes, null, 2));
+      }
+    }
+
+    /* ── Init ── */
+
+    async function init() {
+      try {
+        allThemes = await fetch('./themes.json').then(r => r.json());
+        showRandom();
+        updateHistoryBadge();
+      } catch (e) {
+        document.getElementById('theme-text').textContent = 'themes.json の読み込みに失敗しました';
+        document.getElementById('theme-text').className = 'no-match';
+      }
+    }
+
+    init();
+  </script>
 </body>
 </html>
