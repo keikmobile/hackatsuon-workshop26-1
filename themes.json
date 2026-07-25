@@ -78,5 +78,165 @@
     "category": "personal",
     "difficulty": "advanced",
     "added": "2026-04"
+  },
+  {
+    "id": 11,
+    "theme": "A place you never want to visit again — and why",
+    "theme_ja": "二度と行きたくない場所とその理由",
+    "category": "travel",
+    "difficulty": "beginner",
+    "added": "2026-07"
+  },
+  {
+    "id": 12,
+    "theme": "What's the most unusual food you've tried while traveling?",
+    "theme_ja": "旅先で食べた一番変わった食べ物",
+    "category": "travel",
+    "difficulty": "beginner",
+    "added": "2026-07"
+  },
+  {
+    "id": 13,
+    "theme": "Traveling solo vs. with others — what do you prefer?",
+    "theme_ja": "ひとり旅と複数旅、どちらが好き？",
+    "category": "travel",
+    "difficulty": "intermediate",
+    "added": "2026-07"
+  },
+  {
+    "id": 14,
+    "theme": "How has your morning routine changed over the years?",
+    "theme_ja": "朝のルーティンが変わってきた話",
+    "category": "lifestyle",
+    "difficulty": "beginner",
+    "added": "2026-07"
+  },
+  {
+    "id": 15,
+    "theme": "What's something you spend money on that others might find surprising?",
+    "theme_ja": "他の人が驚くかもしれないお金の使い道",
+    "category": "lifestyle",
+    "difficulty": "intermediate",
+    "added": "2026-07"
+  },
+  {
+    "id": 16,
+    "theme": "If you could change one thing about your daily routine, what would it be?",
+    "theme_ja": "日課を一つ変えるとしたら？",
+    "category": "lifestyle",
+    "difficulty": "beginner",
+    "added": "2026-07"
+  },
+  {
+    "id": 17,
+    "theme": "What hobby have you always wanted to try but never have?",
+    "theme_ja": "ずっとやってみたいけど手をつけていない趣味",
+    "category": "lifestyle",
+    "difficulty": "beginner",
+    "added": "2026-07"
+  },
+  {
+    "id": 18,
+    "theme": "What's something about Japanese culture you want the world to know?",
+    "theme_ja": "世界に知ってほしい日本文化のこと",
+    "category": "culture",
+    "difficulty": "intermediate",
+    "added": "2026-07"
+  },
+  {
+    "id": 19,
+    "theme": "How do you celebrate important milestones in your life?",
+    "theme_ja": "人生の節目をどう祝う？",
+    "category": "culture",
+    "difficulty": "intermediate",
+    "added": "2026-07"
+  },
+  {
+    "id": 20,
+    "theme": "Is there a festival or event from another culture you'd love to experience?",
+    "theme_ja": "体験してみたい、他の文化のお祭りやイベント",
+    "category": "culture",
+    "difficulty": "beginner",
+    "added": "2026-07"
+  },
+  {
+    "id": 21,
+    "theme": "What was your dream job as a child?",
+    "theme_ja": "子どものころの夢の職業",
+    "category": "work",
+    "difficulty": "beginner",
+    "added": "2026-07"
+  },
+  {
+    "id": 22,
+    "theme": "What do you think makes a great leader?",
+    "theme_ja": "優れたリーダーの条件とは？",
+    "category": "work",
+    "difficulty": "intermediate",
+    "added": "2026-07"
+  },
+  {
+    "id": 23,
+    "theme": "Would you rather work for a big company or start your own business?",
+    "theme_ja": "大企業と起業、どちらを選ぶ？",
+    "category": "work",
+    "difficulty": "advanced",
+    "added": "2026-07"
+  },
+  {
+    "id": 24,
+    "theme": "What's a decision you made that completely changed your life?",
+    "theme_ja": "人生を大きく変えた決断",
+    "category": "personal",
+    "difficulty": "intermediate",
+    "added": "2026-07"
+  },
+  {
+    "id": 25,
+    "theme": "What does friendship mean to you?",
+    "theme_ja": "あなたにとって友情とは？",
+    "category": "personal",
+    "difficulty": "beginner",
+    "added": "2026-07"
+  },
+  {
+    "id": 26,
+    "theme": "What's a piece of advice you'd give your younger self?",
+    "theme_ja": "若い自分へ贈るアドバイス",
+    "category": "personal",
+    "difficulty": "intermediate",
+    "added": "2026-07"
+  },
+  {
+    "id": 27,
+    "theme": "What's something you're still learning about yourself?",
+    "theme_ja": "まだ自分の中で学んでいること",
+    "category": "personal",
+    "difficulty": "advanced",
+    "added": "2026-07"
+  },
+  {
+    "id": 28,
+    "theme": "Should schools teach more practical life skills?",
+    "theme_ja": "学校はもっと実用的なスキルを教えるべき？",
+    "category": "society",
+    "difficulty": "intermediate",
+    "added": "2026-07"
+  },
+  {
+    "id": 29,
+    "theme": "How do you think AI will change the job market?",
+    "theme_ja": "AIは働き方をどう変えると思う？",
+    "category": "society",
+    "difficulty": "advanced",
+    "added": "2026-07"
+  },
+  {
+    "id": 30,
+    "theme": "Is city life or countryside life better?",
+    "theme_ja": "都市と田舎、どちらの暮らしが良い？",
+    "category": "society",
+    "difficulty": "beginner",
+    "added": "2026-07"
   }
 ]
